@@ -8,6 +8,8 @@
 #include <thread>
 #include <chrono>
 #include <mutex>
+#include <cstring>
+#include <jsoncpp/json/json.h>
 
 typedef std::vector<std::string> StrVect;
 
@@ -183,7 +185,8 @@ int main() {
         if (ev.type == i3ipc::WindowEventType::FOCUS) {
             if (ev.container) {
                 activeWindow = ev.container->xwindow_id;
-                fprintf(stdout, "DEBUG: active window: %lu\n", activeWindow);
+                std::string wName = ev.container->window_properties.xclass;
+                fprintf(stdout, "DEBUG: active window: %lu, name: %s\n", activeWindow, wName.c_str());
                 applyLayout(activeWindow);
             } else {
                 activeWindow = -1;
@@ -192,7 +195,11 @@ int main() {
     });
 
     while (true) {
-        conn.handle_event();
+        try {
+            conn.handle_event();
+        } catch (const Json::Exception &e) {
+            fprintf(stderr, "ERROR: %s\n", e.what());
+        }
     }
     return 0;
 }

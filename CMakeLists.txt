@@ -15,4 +15,4 @@ target_link_libraries(i3_socket_lang ${I3IPCpp_LIBRARIES})
 
 target_link_libraries(i3_socket_lang ${X11_LIBRARIES})
 target_link_libraries(i3_socket_lang
-        /usr/lib/x86_64-linux-gnu/libxkbfile.a)
+        /usr/lib64/libxkbfile.so)
